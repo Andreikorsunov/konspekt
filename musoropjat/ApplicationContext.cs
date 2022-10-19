@@ -3,20 +3,15 @@
 public class ApplicationContext : DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
-    public DbSet<Employee> Employees { get; set; } = null!;
-    public DbSet<Manager> Managers { get; set; } = null!;
-    public ApplicationContext()
-    {
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
-    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite("Data Source=helloapp.db");
+        optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=helloappdb;Trusted_Connection=True;");
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Employee>().ToTable("Employees");
-        modelBuilder.Entity<Manager>().ToTable("Managers");
+        modelBuilder
+            .Entity<User>()
+            .ToTable("Users", t => t.IsTemporal());
     }
 }
